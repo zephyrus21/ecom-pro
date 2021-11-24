@@ -1,0 +1,33 @@
+openapi: 3.0.0
+info:
+  title: Pro Ecommerce
+  version: 1.0.0
+  description: A pro ecom backend stack
+  contact:
+    name: Piyush Pandey
+    email: pandey.piyus@gmail.com
+
+servers:
+  - url: "{protocol}://localhost:8080/api/{version}"
+    description: Development server
+    variables:
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+      protocol:
+        enum:
+        - http
+        - https
+        default: http
+    
+components:
+  securitySchemas:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    BearerAuth:
+      type: http
+      scheme: bearer
