@@ -6,6 +6,7 @@ const swaggerUi = require("swagger-ui-express");
 const yaml = require("yamljs");
 
 const { home } = require("./routes/home");
+const { user } = require("./routes/user");
 
 const swaggerDocument = yaml.load("./swagger.yaml");
 
@@ -20,5 +21,6 @@ app.use(fileUpload());
 app.use(morgan("dev"));
 
 app.use("/api/v1", home);
+app.use("/user", user);
 
 module.exports = app;
