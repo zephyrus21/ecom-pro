@@ -46,9 +46,9 @@ const userSchema = new mongoose.Schema({
 });
 
 //! encrypt password before saving
-//? can't use arrow function here
+//$ can't use arrow function here
 userSchema.pre("save", async function (next) {
-  //$ only run if password is modified
+  //? only run if password is modified
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
 });
