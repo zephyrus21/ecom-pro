@@ -3,11 +3,11 @@ const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
-const YAML = require("yamljs");
+const yaml = require("yamljs");
 
 const { home } = require("./routes/home");
 
-const swaggerDocument = YAML.load("./swagger.yaml");
+const swaggerDocument = yaml.load("./swagger.yaml");
 
 const app = express();
 
