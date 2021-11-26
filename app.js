@@ -17,10 +17,22 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(fileUpload());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
+
+app.set("view engine", "ejs");
+
 app.use(morgan("dev"));
 
 app.use("/api/v1", home);
 app.use("/user", user);
+
+app.get("/signuptest", (req, res) => {
+  res.render("signup");
+});
 
 module.exports = app;
