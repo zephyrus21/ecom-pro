@@ -1,9 +1,9 @@
-const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
 const BigPromise = require("../middlewares/bigPromise");
 const customError = require("../utils/customError");
 const User = require("../models/user");
 const cookieToken = require("../utils/cookieToken");
+const emailHelper = require("../utils/emailHelper");
 
 exports.signup = BigPromise(async (req, res, next) => {
   if (!req.files) return next(new customError("No file uploaded", 400));
@@ -58,4 +58,38 @@ exports.logout = BigPromise(async (req, res, next) => {
     httpOnly: true,
   });
   res.status(200).send("Logout successful");
+});
+
+exports.forgotPassword = BigPromise(async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) return next(new customError("User not found", 400));
+
+  const forgotToken = user.getForgotPasswordToken();
+
+  user.save({ validateBeforeSave: false });
+
+  const url = `${req.protocol}://${req.get(
+    "host"
+  )}/password/reset/${forgotToken}`;
+
+  const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a request to: \n\n ${url}`;
+
+  try {
+    await emailHelper({ email, subject: "Reset Password", message });
+
+    res.status(200).json({
+      success: true,
+      message: "Email sent",
+    });
+  } catch (error) {
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordExpiry = undefined;
+
+    user.save({ validateBeforeSave: false });
+
+    return next(new customError("There was an error sending the email", 500));
+  }
 });
