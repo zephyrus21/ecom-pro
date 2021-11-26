@@ -6,9 +6,7 @@ const connectWithDb = () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then(() => {
-      console.log("Connected to database");
-    })
+    .then(console.log("Connected to database"))
     .catch((err) => {
       console.log(err);
       process.exit(1);
