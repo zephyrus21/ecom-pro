@@ -29,7 +29,7 @@ app.set("view engine", "ejs");
 app.use(morgan("dev"));
 
 app.use("/api/v1", home);
-app.use("/user", user);
+app.use("/api/v1", user);
 
 app.get("/signuptest", (req, res) => {
   res.render("signup");
