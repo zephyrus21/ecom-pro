@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const cloudinary = require("cloudinary").v2;
 const BigPromise = require("../middlewares/bigPromise");
 const customError = require("../utils/customError");
@@ -73,7 +74,7 @@ exports.forgotPassword = BigPromise(async (req, res, next) => {
 
   const url = `${req.protocol}://${req.get(
     "host"
-  )}/password/reset/${forgotToken}`;
+  )}/api/v1/password/reset/${forgotToken}`;
 
   const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a request to: \n\n ${url}`;
 
@@ -92,4 +93,34 @@ exports.forgotPassword = BigPromise(async (req, res, next) => {
 
     return next(new customError("There was an error sending the email", 500));
   }
+});
+
+exports.resetPassword = BigPromise(async (req, res, next) => {
+  const token = req.params.token;
+
+  const encryptedToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    forgotPasswordToken: encryptedToken,
+    forgotPasswordExpiry: {
+      $gt: Date.now(),
+    },
+  });
+
+  if (!user) return next(new customError("Invalid Token", 400));
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new customError("Passwords does not match", 400));
+  }
+
+  user.password = req.body.password;
+  user.forgotPasswordToken = undefined;
+  user.forgotPasswordExpiry = undefined;
+
+  await user.save();
+
+  cookieToken(user, res);
 });
