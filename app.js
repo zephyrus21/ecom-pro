@@ -31,8 +31,4 @@ app.use(morgan("dev"));
 app.use("/api/v1", home);
 app.use("/api/v1", user);
 
-app.get("/signuptest", (req, res) => {
-  res.render("signup");
-});
-
 module.exports = app;
