@@ -15,3 +15,12 @@ exports.isLoggedIn = BigPromise(async (req, res, next) => {
 
   next();
 });
+
+exports.customRole = (...role) => {
+  return (req, res, next) => {
+    if (!role.includes(req.user.role))
+      return next(new CustomError("You are not authorized", 403));
+
+    next();
+  };
+};
