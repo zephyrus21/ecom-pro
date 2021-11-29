@@ -2,9 +2,9 @@ const crypto = require("crypto");
 const cloudinary = require("cloudinary").v2;
 const BigPromise = require("../middlewares/bigPromise");
 const customError = require("../utils/customError");
-const User = require("../models/user");
 const cookieToken = require("../utils/cookieToken");
 const emailHelper = require("../utils/emailHelper");
+const User = require("../models/user");
 
 exports.signup = BigPromise(async (req, res, next) => {
   if (!req.files) return next(new customError("No file uploaded", 400));

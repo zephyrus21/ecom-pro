@@ -7,6 +7,7 @@ const yaml = require("yamljs");
 
 const { home } = require("./routes/home");
 const { user } = require("./routes/user");
+const { product } = require("./routes/product");
 
 const swaggerDocument = yaml.load("./swagger.yaml");
 
@@ -30,5 +31,6 @@ app.use(morgan("dev"));
 
 app.use("/api/v1", home);
 app.use("/api/v1", user);
+app.use("/api/v1", product);
 
 module.exports = app;
