@@ -42,6 +42,8 @@ class WhereClause {
     const copyQJson = JSON.parse(copyQString);
 
     this.base = this.base.find(copyQJson);
+
+    return this;
   }
 
   pager(resultPerPage) {
