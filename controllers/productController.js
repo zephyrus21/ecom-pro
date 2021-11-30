@@ -10,6 +10,7 @@ exports.addProduct = BigPromise(async (req, res, next) => {
   if (!req.files) return next(new customError("No file uploaded", 400));
 
   if (req.files) {
+    //? If there are multiple files then upload it one by one
     for (let index = 0; index < req.files.photos.length; index++) {
       let result = await cloudinary.uploader.upload(
         req.files.photos[index].tempFilePath,
@@ -17,6 +18,8 @@ exports.addProduct = BigPromise(async (req, res, next) => {
           folder: "products",
         }
       );
+
+      //? also save the url in an array
       imageArray.push({
         id: result.public_id,
         secure_url: result.secure_url,
